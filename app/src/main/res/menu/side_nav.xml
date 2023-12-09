@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <group
+
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/home"
+            android:title="@string/home"
+            app:actionLayout="@layout/action_side_nav" />
+    </group>
+    <group
+        android:id="@+id/group3"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/about_us"
+            android:title="@string/about_us"
+            app:actionLayout="@layout/action_side_nav" />
+    </group>
+    <group
+        android:id="@+id/group2"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/item_condact_us"
+            android:title="@string/contact_us"
+            app:actionLayout="@layout/action_side_nav" />
+    </group>
+    <group
+        android:id="@+id/group1"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/item_settings"
+            android:title="@string/settings"
+            app:actionLayout="@layout/action_side_nav" />
+    </group>
+    <group
+        android:id="@+id/group6"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/item_privacy"
+            android:title="@string/privacy_policy"
+            app:actionLayout="@layout/action_side_nav" />
+    </group>
+    <group
+        android:id="@+id/group7"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/item_terms"
+            android:title="@string/terms_amp_conditions"
+            app:actionLayout="@layout/action_side_nav" />
+    </group>
+    <group
+
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/login"
+            android:title="@string/login"
+            app:actionLayout="@layout/action_side_nav" />
+    </group>
+    <group
+        android:id="@+id/group9"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/item_lang"
+            android:title="@string/language"
+            app:actionLayout="@layout/action_side_nav_with_text" />
+    </group>
+    <group
+        android:id="@+id/group10"
+        android:checkableBehavior="single"
+        android:visible="false">
+        <item
+
+            android:title="@string/help"
+            app:actionLayout="@layout/action_side_nav" />
+    </group>
+
+</menu>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/lnr_main"
+    android:layout_width="match_parent"
+
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/standard_10"
+
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:id="@+id/lnt_text_incoming"
+        android:layout_width="match_parent"
+        android:layout_marginEnd="@dimen/standard_55"
+        android:layout_height="wrap_content"
+        android:background="@drawable/chat_receiver_bubble">
+
+        <TextView
+            android:id="@+id/txt_incoming"
+            style="@style/fontRegular"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/standard_20"
+            android:textSize="12dp"
+            android:text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor."
+            android:textColor="@color/white" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginStart="@dimen/standard_55"
+        android:id="@+id/lnt_text_outgoing"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/chat_sender_bubble">
+
+        <TextView
+            android:id="@+id/txt_outgoing"
+            style="@style/fontRegular"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12dp"
+            android:padding="@dimen/standard_20"
+            android:text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor."
+            android:textColor="@color/white" />
+    </LinearLayout>
+
+</LinearLayout>

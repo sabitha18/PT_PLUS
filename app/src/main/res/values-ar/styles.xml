@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="line">line</style>
+
+    <style name="MySeekBar" parent="Widget.AppCompat.SeekBar">
+        <item name="android:progressTint">#D9D9D9</item>
+        <item name="android:thumbTint">#c51162</item>
+    </style>
+
+
+
+    <style name="fontRegular">
+        <item name="android:fontFamily">@font/nunito_regular</item>
+    </style>
+    <style name="fontBold">
+        <item name="android:fontFamily">@font/nunito_bold</item>
+    </style>
+
+    <style name="FilledBoxEndIconTint" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="endIconTint">@color/red</item>
+    </style>
+    <style name="CustomBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/CustomBottomSheetStyle</item>
+    </style>
+
+    <style name="CustomBottomSheetStyle" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
+    <style name="CalenderViewCustom" parent="Theme.AppCompat">
+        <item name="colorAccent">@color/yellow</item>
+        <item name="colorPrimary">@color/white</item>
+    </style>
+
+    <style name="CalenderViewDateCustomText" parent="android:TextAppearance.DeviceDefault.Small">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:weekNumberColor">@color/yellow</item>
+    </style>
+
+    <style name="CalenderViewWeekCustomText" parent="android:TextAppearance.DeviceDefault.Small">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:background">@color/primary_color</item>
+    </style>
+
+    <style name="My_Widget.MaterialComponents.Chip.Choice" parent="Widget.MaterialComponents.Chip.Filter">
+        <!-- Chip background color selector -->
+        <item name="chipBackgroundColor">@color/primary_color</item>
+        <!-- Border color -->
+
+
+        <!-- Chip text color selector -->
+        <item name="android:textColor">@color/white</item>
+        <!-- Chip close icon color selector -->
+        <item name="closeIconTint">@color/white</item>
+        <item name="rippleColor">@color/white</item>
+        <item name="color">@color/white</item>
+        <item name="android:color">@color/white</item>
+        <item name="android:tint">@color/white</item>
+        <item name="tint">@color/white</item>
+        <!--        <item name="checkedIcon">@drawable/ic_baseline_check_24</item>-->
+
+    </style>
+    <style name="mySpinnerItemStyle" parent="Base.Widget.AppCompat.Spinner">
+        <item name="android:textColor">@color/red</item>
+    </style>
+    <style name="filterChip" parent="Widget.MaterialComponents.Chip.Filter">
+        <!-- Chip background color selector -->
+
+        <!-- Border color -->
+        <item name="chipBackgroundColor">@color/white</item>
+
+        <!-- Chip text color selector -->
+        <item name="android:textColor">@color/black</item>
+        <!-- Chip close icon color selector -->
+        <item name="closeIconTint">@color/black</item>
+        <item name="rippleColor">@color/white</item>
+        <item name="color">@color/white</item>
+        <item name="android:color">@color/black</item>
+        <item name="android:tint">@color/black</item>
+        <item name="tint">@color/black</item>
+        <item name="checkedIcon">@drawable/baseline_check_24</item>
+
+    </style>
+    <style name="SwitchTheme" parent="Theme.AppCompat.Light">
+        <item name="android:colorControlActivated">#148E13</item>
+    </style>
+</resources>

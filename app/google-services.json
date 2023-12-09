@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "615160950689",
+    "project_id": "ptplus-d2249",
+    "storage_bucket": "ptplus-d2249.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:615160950689:android:cfb618449458b738b765e0",
+        "android_client_info": {
+          "package_name": "com.pt_plus"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "615160950689-b2e7e0ph3g6cfpl639vsim0516m5mi6f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAov9OFu_JNiJfJ09fHKE2Xw_GLg8v5DXU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "615160950689-b2e7e0ph3g6cfpl639vsim0516m5mi6f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

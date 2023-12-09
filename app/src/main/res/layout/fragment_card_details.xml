@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/primary_color"
+    tools:context=".Fragment.FragmentCardDetails">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/appbar"
+            layout="@layout/appbar_layout_back_with_title" />
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/standard_20"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center|center_horizontal"
+                    android:gravity="center|center_horizontal"
+                    android:orientation="horizontal">
+
+
+                </LinearLayout>
+
+                <TextView
+                    style="@style/fontBold"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/standard_10"
+                    android:layout_marginTop="@dimen/standard_20"
+                    android:gravity="start"
+
+                    android:text="Name on Card"
+                    android:textColor="@color/white"
+                    android:textSize="12dp" />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/standard_10"
+                    android:backgroundTint="@color/grey_text_color"
+                    android:minHeight="48dp"
+                    android:paddingStart="@dimen/standard_10"
+                    android:text="Jameson Dunn"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/standard_15"
+                    tools:ignore="SpeakableTextPresentCheck" />
+
+                <TextView
+                    style="@style/fontBold"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/standard_10"
+                    android:layout_marginTop="@dimen/standard_20"
+                    android:gravity="start"
+                    android:text="Card Number"
+                    android:textColor="@color/white"
+                    android:textSize="12dp" />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/standard_10"
+                    android:backgroundTint="@color/grey_text_color"
+                    android:drawableEnd="@drawable/ic_mascard_edittext"
+                    android:paddingStart="@dimen/standard_10"
+                    android:text="4560 5644 3224 4543"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/standard_15" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/fontBold"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/standard_10"
+                        android:layout_marginTop="@dimen/standard_20"
+                        android:layout_weight=".5"
+                        android:gravity="start"
+                        android:text="Expiry Date"
+                        android:textColor="@color/white"
+                        android:textSize="12dp" />
+
+                    <TextView
+                        style="@style/fontBold"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/standard_15"
+                        android:layout_marginTop="@dimen/standard_20"
+
+                        android:layout_weight=".5"
+                        android:gravity="start"
+                        android:text="CVV"
+                        android:textColor="@color/white"
+                        android:textSize="12dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/standard_10"
+                        android:layout_weight=".5"
+                        android:backgroundTint="@color/grey_text_color"
+                        android:minHeight="48dp"
+                        android:paddingStart="@dimen/standard_10"
+                        android:text="09 / 20"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/standard_15"
+                        tools:ignore="SpeakableTextPresentCheck" />
+
+                    <EditText
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/standard_15"
+                        android:layout_marginTop="@dimen/standard_10"
+                        android:layout_weight=".5"
+                        android:backgroundTint="@color/grey_text_color"
+                        android:minHeight="48dp"
+                        android:paddingStart="@dimen/standard_10"
+                        android:text="467"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/standard_15"
+                        tools:ignore="SpeakableTextPresentCheck" />
+                </LinearLayout>
+
+                <CheckBox
+                    android:id="@+id/chk_4_delivery"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/standard_5"
+                    android:buttonTint="@color/grey_text_color"
+                    android:text="Save this card details"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/white" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/standard_20"
+                    android:layout_marginTop="@dimen/standard_35"
+                    android:layout_marginEnd="@dimen/standard_20"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".5"
+                        android:paddingEnd="@dimen/standard_5">
+
+                        <Button
+
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+
+                            android:background="@drawable/borderd_curve_black_bg_with_grey_border"
+                            android:gravity="center"
+                            android:text="CANCEL"
+                            android:textColor="@color/white" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".5"
+                        android:paddingStart="@dimen/standard_5">
+
+                        <Button
+                            android:id="@+id/btn_login"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+
+                            android:background="@drawable/product_qty_controle"
+                            android:gravity="center"
+                            android:text="SAVE"
+                            android:textColor="@color/white" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
+    </LinearLayout>
+
+</FrameLayout>

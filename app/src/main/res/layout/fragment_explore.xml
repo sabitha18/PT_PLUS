@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/primary_color"
+    tools:context=".Fragment.Explore.FragmentExplore">
+
+   <LinearLayout
+       android:id="@+id/lnr_main"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:orientation="vertical">
+       <LinearLayout
+           android:layout_margin="20dp"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:orientation="horizontal">
+           <EditText
+               android:id="@+id/et_search"
+               android:drawablePadding="20dp"
+               android:imeOptions="actionSearch"
+               android:inputType="text"
+               android:paddingStart="10dp"
+               android:paddingEnd="10dp"
+               android:drawableStart="@drawable/baseline_search_24"
+               android:drawableEnd="@drawable/ic_baseline_close_24"
+               android:background="@drawable/explore_edittext_bg"
+               android:layout_width="0dp"
+               android:textColor="@color/white"
+               android:layout_height="50dp"
+               android:layout_weight=".8"/>
+
+           <TextView
+
+               style="@style/fontRegular"
+               android:layout_width="0dp"
+               android:layout_weight=".2"
+               android:layout_height="wrap_content"
+               android:gravity="center"
+               android:text="@string/cancel"
+               android:textColor="@color/white"
+               android:textSize="14dp" />
+
+       </LinearLayout>
+
+
+               <com.google.android.material.tabs.TabLayout
+                   android:id="@+id/tab_layout"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:background="@color/primary_color"
+                   app:tabTextColor="#FFFFFF"
+                   app:tabMode="fixed"
+                   app:tabSelectedTextColor="#FFFFFF"
+                   app:tabIndicatorColor="@color/text_hind_color"
+                   app:tabIndicatorHeight="3dp"
+
+                   app:tabGravity="fill"/>
+
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:orientation="vertical">
+           <androidx.viewpager.widget.ViewPager
+
+               android:id="@+id/view_pager"
+               android:layout_width="match_parent"
+               android:layout_height="0dp"
+               android:layout_weight=".8"/>
+
+           <LinearLayout
+               android:layout_width="match_parent"
+               android:layout_height="0dp"
+               android:layout_weight=".2"
+               android:orientation="vertical">
+               <TextView
+                   android:text="@string/recent_search"
+                   android:layout_width="match_parent"
+
+                   android:layout_height="wrap_content"
+                   style="@style/fontBold"
+                   android:textSize="18dp"
+                   android:textColor="@color/white"
+                   android:layout_gravity="center"
+                   android:layout_marginEnd="@dimen/standard_20"
+                   android:layout_marginStart="20dp"/>
+               <androidx.recyclerview.widget.RecyclerView
+
+                   android:id="@+id/rcy_hsitory"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                />
+           </LinearLayout>
+
+
+       </LinearLayout>
+
+
+
+
+
+   </LinearLayout>
+
+</FrameLayout>

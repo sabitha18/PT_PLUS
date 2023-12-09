@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">example.com</domain>
+        <domain includeSubdomains="true">apiv2.upayments.com</domain>
+        <domain includeSubdomains="true">https://apiv2.upayments.com/</domain>
+        <domain includeSubdomains="true"> https://challenges.cloudflare.com/</domain>
+        <domain includeSubdomains="true"> challenges.cloudflare.com</domain>
+        <trust-anchors>
+            <certificates src="system" />
+            <certificates src="user" />
+        </trust-anchors>
+    </domain-config>
+</network-security-config>

@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/lnr_main"
+    android:layout_width="match_parent"
+
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/standard_20"
+
+    android:orientation="vertical">
+
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/border_color"
+        app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="10dp"
+        app:cardMaxElevation="12dp"
+        app:cardPreventCornerOverlap="true"
+
+        >
+
+        <LinearLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/standard_10"
+                android:layout_marginTop="@dimen/standard_10"
+                android:layout_marginEnd="@dimen/standard_10"
+                android:background="@color/border_color"
+                android:orientation="horizontal">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/card_group_block"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_gravity="center"
+                    android:background="@color/border_color"
+                    android:backgroundTint="@color/border_color"
+                    app:cardCornerRadius="30dp"
+                    app:cardUseCompatPadding="true">
+
+                    <ImageView
+                        android:id="@+id/imageView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:adjustViewBounds="true"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/ic_trainer_4" />
+
+
+                </androidx.cardview.widget.CardView>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/standard_10"
+                    android:layout_weight=".7"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/standard_5"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/txtTrainerName"
+                            style="@style/fontRegular"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="Richard Will"
+                            android:textColor="@color/white"
+                            android:textSize="14dp" />
+
+                        <TextView
+                            android:id="@+id/txt_rating"
+                            style="@style/fontRegular"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="@dimen/standard_5"
+                            android:background="@drawable/white_border_curverd_bg"
+                            android:padding="2dp"
+                            android:text="4.2"
+                            android:textColor="@color/border_color"
+                            android:textSize="8dp" />
+
+
+                    </LinearLayout>
+
+
+                    <TextView
+                        android:id="@+id/txt_spacl"
+                        style="@style/fontRegular"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="@dimen/standard_5"
+                        android:text="Fitness"
+                        android:textColor="@color/grey_text_color"
+                        android:textSize="12dp" />
+
+                    <TextView
+                        android:id="@+id/txt_exsperiance"
+                        style="@style/fontRegular"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="@dimen/standard_5"
+                        android:text="5 years experience"
+                        android:textColor="@color/white"
+                        android:textSize="12dp"
+                        app:layout_constraintBottom_toBottomOf="parent" />
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="@dimen/standard_10"
+                android:layout_marginTop="@dimen/standard_10"
+                android:layout_marginEnd="@dimen/standard_10"
+                android:layout_marginBottom="@dimen/standard_10"
+                android:background="#373737" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/standard_10"
+                android:layout_marginEnd="@dimen/standard_10"
+                android:orientation="horizontal">
+
+                <androidx.cardview.widget.CardView
+
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_gravity="center"
+                    android:background="@color/secondary_color"
+                    android:backgroundTint="@color/secondary_color"
+                    app:cardCornerRadius="10dp"
+                    app:cardUseCompatPadding="true">
+
+                    <ImageView
+android:id="@+id/img_plan"
+                        android:scaleType="fitXY"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:adjustViewBounds="true"
+                        android:src="@drawable/ic_shop_by_category_1" />
+
+
+                </androidx.cardview.widget.CardView>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/standard_10"
+                    android:layout_weight=".7"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+
+                    <TextView
+android:id="@+id/txt_paln_title"
+                        style="@style/fontRegular"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+
+                        android:layout_marginTop="@dimen/standard_5"
+                        android:text="The Ultimate Basketball Training Program"
+                        android:textColor="@color/white"
+                        android:textSize="12dp" />
+
+                    <TextView
+android:id="@+id/txt_plan_price"
+                        style="@style/fontRegular"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="@dimen/standard_5"
+                        android:text=""
+                        android:textColor="@color/grey_text_color"
+                        android:textSize="12dp"
+                        app:layout_constraintBottom_toBottomOf="parent" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="right"
+                    android:layout_weight=".3"
+
+                    android:gravity="right">
+
+                    <androidx.cardview.widget.CardView
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center|center_vertical"
+                        android:background="@color/secondary_color"
+                        android:backgroundTint="@color/primary_color"
+                        android:gravity="center|center_vertical"
+                        android:paddingStart="@dimen/standard_5"
+                        android:paddingEnd="@dimen/standard_10"
+                        app:cardCornerRadius="16dp"
+                        app:cardUseCompatPadding="true">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center|center_vertical"
+                            android:gravity="center|center_vertical"
+                            android:orientation="horizontal"
+                            android:padding="@dimen/standard_10">
+
+                            <ImageView
+                                android:layout_width="10dp"
+                                android:layout_height="10dp"
+                                android:src="@drawable/ic_eye" />
+
+                            <TextView
+
+                                style="@style/fontRegular"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginLeft="@dimen/standard_5"
+
+                                android:gravity="center|center_vertical"
+                                android:text="@string/view"
+                                android:textColor="@color/white"
+                                android:textSize="8dp" />
+                        </LinearLayout>
+
+
+                    </androidx.cardview.widget.CardView>
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="@dimen/standard_10"
+                android:background="@color/grey_dark"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="@dimen/standard_10">
+
+                <TextView
+                    android:id="@+id/txt_date"
+                    style="@style/fontRegular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="@dimen/standard_10"
+
+                    android:text="Book on: Tuesday, Oct 9, 2022"
+                    android:textColor="#E5E5E5"
+                    android:textSize="10dp"
+                    app:layout_constraintBottom_toBottomOf="parent" />
+
+                <TextView
+                    android:id="@+id/txt_price_total"
+                    style="@style/fontRegular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="@dimen/standard_20"
+
+                    android:text=""
+                    android:textColor="@color/white"
+                    android:textSize="12dp"
+                    app:layout_constraintBottom_toBottomOf="parent" />
+
+                <LinearLayout
+                    android:id="@+id/lnr_cancel_booking"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|end|right"
+                    android:gravity="center_vertical|end|right">
+
+                    <ImageView
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"
+                        android:src="@drawable/ic_delete_grey" />
+
+                    <TextView
+                        style="@style/fontRegular"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="@dimen/standard_5"
+                        android:layout_marginEnd="@dimen/standard_10"
+                        android:text="@string/cancel"
+                        android:textColor="@color/white"
+                        android:textSize="12dp"
+                        app:layout_constraintBottom_toBottomOf="parent" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+    </androidx.cardview.widget.CardView>
+
+</LinearLayout>
