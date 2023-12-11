@@ -249,25 +249,31 @@
                             android:textColor="@color/white"
                             android:textSize="18dp" />
 
-                        <com.applandeo.materialcalendarview.CalendarView
+<!--                        <com.applandeo.materialcalendarview.CalendarView-->
 
-                            android:id="@+id/calendarView"
+<!--                            android:id="@+id/calendarView"-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            app:abbreviationsBarColor="@color/secondary_color"-->
+<!--                            app:abbreviationsLabelsColor="@color/white"-->
+<!--                            app:anotherMonthsDaysLabelsColor="@color/grey_text_color"-->
+<!--                            app:datePicker="true"-->
+<!--                            app:daysLabelsColor="@color/white"-->
+<!--                            app:disabledDaysLabelsColor="@color/grey_text_color"-->
+<!--                            app:forwardButtonSrc="@drawable/ic_forword_calender_arrow"-->
+<!--                            app:headerColor="@color/secondary_color"-->
+<!--                            app:pagesColor="@color/secondary_color"-->
+<!--                            app:previousButtonSrc="@drawable/ic_backword_calender_arrow"-->
+<!--                            app:selectionColor="@color/yellow"-->
+
+<!--                            app:todayLabelColor="@color/white" />-->
+                        <org.naishadhparmar.zcustomcalendar.CustomCalendar
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            app:abbreviationsBarColor="@color/secondary_color"
-                            app:abbreviationsLabelsColor="@color/white"
-                            app:anotherMonthsDaysLabelsColor="@color/grey_text_color"
-                            app:datePicker="true"
-                            app:daysLabelsColor="@color/white"
-                            app:disabledDaysLabelsColor="@color/grey_text_color"
-                            app:forwardButtonSrc="@drawable/ic_forword_calender_arrow"
-                            app:headerColor="@color/secondary_color"
-                            app:pagesColor="@color/secondary_color"
-                            app:previousButtonSrc="@drawable/ic_backword_calender_arrow"
-                            app:selectionColor="@color/yellow"
-
-                            app:todayLabelColor="@color/white" />
-
+                            android:id="@+id/custom_calendar"
+                            android:background="@android:color/transparent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"/>
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="1dp"

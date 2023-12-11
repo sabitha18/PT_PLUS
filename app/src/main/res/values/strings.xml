@@ -182,6 +182,15 @@
     <string name="continue_a">continue</string>
     <string name="we_have_sent_a_password_recover_instructions_to_your_email">We have Sent a otp to your mobile number.</string>
     <string name="otp">OTP</string>
+    <string-array name="days_of_week">
+        <item>Sunday</item>
+        <item>Monday</item>
+        <item>Tuesday</item>
+        <item>Wednesday</item>
+        <item>Thursday</item>
+        <item>Friday</item>
+        <item>Saturday</item>
+    </string-array>
     <string name="haven_t_received_an_email_yet">Haven\'t received an otp yet?</string>
     <string name="create_new_password">Create new password</string>
     <string name="your_new_password_must_be_different_from_previous_used_password">Your new password must be different from previous used password</string>
