@@ -10,12 +10,12 @@ import android.os.Message;
 import org.naishadhparmar.zcustomcalendar.OnDateSelectedListener;
 import org.naishadhparmar.zcustomcalendar.Property;
 
+import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -24,11 +24,6 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.applandeo.materialcalendarview.CalendarView;
-import com.applandeo.materialcalendarview.EventDay;
-import com.applandeo.materialcalendarview.exceptions.OutOfDateRangeException;
-import com.applandeo.materialcalendarview.listeners.OnDayClickListener;
-import com.applandeo.materialcalendarview.utils.DateUtils;
 import com.bumptech.glide.Glide;
 import com.pt_plus.Activitys.ActivityLogin;
 import com.pt_plus.Adapter.CommonCardCategoryListAdapter;
@@ -42,7 +37,6 @@ import com.pt_plus.Service.CenterService;
 import com.pt_plus.Service.TrainerService;
 import com.pt_plus.Service.TrainerServiceNew;
 import com.pt_plus.Utils.AppDateUtils;
-import com.pt_plus.Utils.AppLogger;
 import com.pt_plus.Utils.AppUtils;
 import com.pt_plus.Utils.CustomCalender;
 import com.pt_plus.cons.LocalCache;
@@ -54,16 +48,18 @@ import org.json.JSONObject;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 
-public class FragmentAppoinment extends SuperFragment {
+public class FragmentAppoinment extends SuperFragment implements CustomCalender.OnRightButtonClickListener,CustomCalender.OnLeftButtonClickListener {
 
+
+    private AttributeSet AttributeSetNew;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -71,10 +67,11 @@ public class FragmentAppoinment extends SuperFragment {
 
     }
 
-
+    private JSONArray disabledDates;
     private TrainerService trainerService;
     private TrainerServiceNew trainerServiceOne;
     private CustomCalender customCalendar;
+    HashMap<Integer, Object> dateHashmap = new HashMap<>();
     View view;
     CommonCardCategoryListAdapter commonCardCategoryListAdapter;
 
@@ -134,6 +131,9 @@ public class FragmentAppoinment extends SuperFragment {
         txtAMount = v.findViewById(R.id.txt_amount);
 
         customCalendar = view.findViewById(R.id.custom_calendar);
+        customCalendar.setOnLeftButtonClickListener(this);
+        customCalendar.setOnRightButtonClickListener(this); // Assuming your Fragment implements the interface
+
         ProccessView();
 
         recyclerViewActivities = v.findViewById(R.id.rcy_activities);
@@ -161,8 +161,8 @@ public class FragmentAppoinment extends SuperFragment {
             try {
                 System.out.println("sabi 000   ---------    " + jsonObject);
                 if (jsonObject.has("result")) {
-                    JSONArray disabledDates = jsonObject.getJSONArray("result");
-                    setDisabledDaysNew(disabledDates);
+                    disabledDates = jsonObject.getJSONArray("result");
+                    setDisabledDaysNew(disabledDates, customCalendar.getSelectedDate(),dateHashmap);
 
                 }
             } catch (Exception e) {
@@ -179,8 +179,7 @@ public class FragmentAppoinment extends SuperFragment {
     };
 
 
-
-    private void setDisabledDaysNew(JSONArray availableDays) {
+    private void setDisabledDaysNew(JSONArray availableDays, Calendar selectedDate, HashMap<Integer, Object> dateHashmap) {
         try {
 
             List<String> availableWeeks = new ArrayList<>();
@@ -195,9 +194,9 @@ public class FragmentAppoinment extends SuperFragment {
                 String availableDay = dayObject.getString("day");
                 availableWeeks.add(availableDay);
             }
-            System.out.println("check == "+availableWeeks);
+            System.out.println("check == " + availableWeeks);
             List<String> disabledDates = getDisabledDates(availableWeeks);
-            System.out.println("check == 333 "+disabledDates);
+            System.out.println("check == 333 " + disabledDates);
 
 
             HashMap<Object, Property> descHashMap = new HashMap<>();
@@ -205,14 +204,16 @@ public class FragmentAppoinment extends SuperFragment {
             defaultProperty.layoutResource = R.layout.default_view;
             defaultProperty.dateTextViewResource = R.id.text_view;
             descHashMap.put("default", defaultProperty);
+
             Property currentProperty = new Property();
             currentProperty.layoutResource = R.layout.current_view;
             currentProperty.dateTextViewResource = R.id.text_view;
             descHashMap.put("current", currentProperty);
+
             Property presentProperty = new Property();
             presentProperty.layoutResource = R.layout.present_view;
             presentProperty.dateTextViewResource = R.id.text_view;
-            descHashMap.put("present", presentProperty);
+            descHashMap.put("previous", presentProperty);
 
             // For absent
             Property absentProperty = new Property();
@@ -223,32 +224,45 @@ public class FragmentAppoinment extends SuperFragment {
             // set desc hashmap on custom calendar
             customCalendar.setMapDescToProp(descHashMap);
 
-            // Initialize date hashmap
-            HashMap<Integer, Object> dateHashmap = new HashMap<>();
-
-            // initialize calendar
-            Calendar calendar = Calendar.getInstance();
+            // initialize calendar to set current month
+            Calendar calendar = selectedDate;
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-            // Put values
-            dateHashmap.put(calendar.get(Calendar.DAY_OF_MONTH), "current");
 
-            for (int i = 1; i < calendar.get(Calendar.DAY_OF_MONTH); i++) {
-                dateHashmap.put(i, "present");
+
+
+             // checking month previous or not to set disable
+            int currentMonth = Calendar.getInstance().get(Calendar.MONTH);
+            if (calendar.get(Calendar.MONTH) == currentMonth) {
+                System.out.println("check == 222222   "+calendar.get(Calendar.DAY_OF_MONTH)+"  33  "+calendar.get(Calendar.MONTH));
+                dateHashmap.clear();
+                Calendar calendar_new = Calendar.getInstance();
+
+                for (int i = 1; i < calendar_new.get(Calendar.DAY_OF_MONTH); i++) {
+                    dateHashmap.put(i, "previous");
+                }
+                dateHashmap.put(calendar_new.get(Calendar.DAY_OF_MONTH), "current");
+                loadTimeSlotesNew(calendar_new);
             }
-
+            System.out.println("disabled dates **   " + disabledDates);
             for (String disabledDate : disabledDates) {
-                Calendar disabledCalendar = Calendar.getInstance();
+                Calendar disabledCalendar = selectedDate;
                 disabledCalendar.setTime(dateFormat.parse(disabledDate));
 
                 // Get the day of the month for the disabled date
                 int dayOfMonth = disabledCalendar.get(Calendar.DAY_OF_MONTH);
 
-                if ("present".equals(dateHashmap.get(dayOfMonth))) {
+                if ("previous".equals(dateHashmap.get(dayOfMonth))) {
 
-                }else{
+                } else {
                     dateHashmap.put(dayOfMonth, "absent");
                 }
 
+            }
+            for (Map.Entry<Integer, Object> entry : dateHashmap.entrySet()) {
+                int dayOfMonth = entry.getKey();
+                Object value = entry.getValue();
+
+                System.out.println("check ==    "+"Day: " + dayOfMonth + ", Value: " + value);
             }
             // set date
             customCalendar.setDate(calendar, dateHashmap);
@@ -261,12 +275,15 @@ public class FragmentAppoinment extends SuperFragment {
                     if ("absent".equals(dateHashmap.get(dayOfMonth))) {
                         // Handle the case where an "absent" date is clicked (no action in this example)
                         return;
-                    }  if ("present".equals(dateHashmap.get(dayOfMonth))) {
+                    }
+                    if ("previous".equals(dateHashmap.get(dayOfMonth))) {
                         // Handle the case where an "absent" date is clicked (no action in this example)
                         return;
-                    }else {
+                    } else {
                         for (Integer day : dateHashmap.keySet()) {
+                            System.out.println(" selected date -----   " + selectedDate);
                             if ("current".equals(dateHashmap.get(day))) {
+                                loadTimeSlotesNew(selectedDate);
                                 dateHashmap.put(day, "default");
                                 break;  // Assuming only one "current" selection is allowed
                             }
@@ -288,7 +305,6 @@ public class FragmentAppoinment extends SuperFragment {
             });
 
 
-
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (ParseException e) {
@@ -301,9 +317,11 @@ public class FragmentAppoinment extends SuperFragment {
 
         // Set the start and end date range for your calendar
         Calendar startDate = Calendar.getInstance();
-        startDate.set(customCalendar.getSelectedDate().get(Calendar.YEAR), customCalendar.getSelectedDate().get(Calendar.MONTH), 1); // Set your desired start date
+        startDate.setTime(customCalendar.getSelectedDate().getTime());
+        startDate.set(Calendar.DAY_OF_MONTH, 1); // Set your desired start date
 
         Calendar endDate = Calendar.getInstance();
+        endDate.setTime(customCalendar.getSelectedDate().getTime());
         endDate.set(Calendar.DAY_OF_MONTH, endDate.getActualMaximum(Calendar.DAY_OF_MONTH));
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
@@ -324,6 +342,7 @@ public class FragmentAppoinment extends SuperFragment {
 
         return disabledDates;
     }
+
 
     private static String getDayOfWeek(Date date) {
         Calendar calendar = Calendar.getInstance();
@@ -483,8 +502,8 @@ public class FragmentAppoinment extends SuperFragment {
                         try {
                             System.out.println("sabi 000   ---------    " + jsonObject);
                             if (jsonObject.has("result")) {
-                               JSONArray disabledDates = jsonObject.getJSONArray("result");
-                                setDisabledDaysNew(disabledDates);
+                                disabledDates = jsonObject.getJSONArray("result");
+                                setDisabledDaysNew(disabledDates, customCalendar.getSelectedDate(), dateHashmap);
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -496,6 +515,33 @@ public class FragmentAppoinment extends SuperFragment {
                         // Handle error
                     }
                 });
+            }
+
+            getFragmentActivity().showProgress(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void loadTimeSlotesNew(Calendar calendar) {
+        try {
+
+            Date date = calendar.getTime();
+
+            selectedDate = AppDateUtils.getInstance().convertDateToStr(date, "YYYY-MM-dd");
+            if (LocalCache.getCache().getSelectedBookingModel().isFromCenter) {
+
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("center_id", LocalCache.getCache().getSelectedBookingModel().centerModel.center_id);
+                jsonObject.put("date", selectedDate);
+                centerService.getCenterTimeSLotes(ServiceNames.REQUEST_ID_TRINER_TIME_SLOTES, jsonObject);
+            } else {
+
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("trainer_id", LocalCache.getCache().getSelectedBookingModel().trainersModel.trainer_id);
+                jsonObject.put("date", selectedDate);
+                trainerService.getTrianerTimeSlotes(ServiceNames.REQUEST_ID_TRINER_TIME_SLOTES, jsonObject);
             }
 
             getFragmentActivity().showProgress(true);
@@ -687,4 +733,18 @@ public class FragmentAppoinment extends SuperFragment {
         getFragmentActivity().getSupportFragmentManager().popBackStack();
     }
 
+    @Override
+    public void onRightButtonClicked() {
+        Calendar selectedMonthCalendar = customCalendar.getSelectedDate();
+        System.out.println("right clicked -----------------" + disabledDates);
+        HashMap<Integer, Object> dateHashmap = new HashMap<>();
+        setDisabledDaysNew(disabledDates, selectedMonthCalendar, dateHashmap);
+    }
+
+    public void onLeftButtonClicked() {
+        Calendar selectedMonthCalendar = customCalendar.getSelectedDate();
+        System.out.println("left clicked -----------------" + disabledDates);
+        HashMap<Integer, Object> dateHashmap = new HashMap<>();
+        setDisabledDaysNew(disabledDates, selectedMonthCalendar, dateHashmap);
+    }
 }

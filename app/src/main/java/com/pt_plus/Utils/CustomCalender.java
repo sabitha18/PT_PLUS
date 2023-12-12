@@ -66,7 +66,8 @@ public class CustomCalender extends LinearLayout {
     private Map<Integer, Object> mapDateToTag = null;
     private Map<Integer, Object> mapDateToDesc = null;
     private Map<Object, Property> mapDescToProp = null;
-
+    private OnRightButtonClickListener rightButtonClickListener;
+    private OnLeftButtonClickListener leftButtonClickListener;
     /**
      * Constructor that is called when inflating from XML.
      *
@@ -88,8 +89,6 @@ public class CustomCalender extends LinearLayout {
         rowHeight = attributes.getDimension(R.styleable.CustomCalendar_row_height, 0.0f);
         initialize();
     }
-
-
 
 
     private void initialize() {
@@ -130,7 +129,11 @@ public class CustomCalender extends LinearLayout {
                         mapDateToTag = null;
                     }
                     setAll();
-                    //fragmentAppoinment.updateDisabledDays();
+                    if (leftButtonClickListener != null) {
+                        leftButtonClickListener.onLeftButtonClicked();
+                    }else{
+                        System.out.println("null ---------------------");
+                    }
                 }
             }
         });
@@ -152,6 +155,11 @@ public class CustomCalender extends LinearLayout {
                     mapDateToTag = null;
                 }
                 setAll();
+                if (rightButtonClickListener != null) {
+                    rightButtonClickListener.onRightButtonClicked();
+                }else{
+                    System.out.println("null ---------------------");
+                }
                 //fragmentAppoinment.updateDisabledDays();
 
 
@@ -160,6 +168,18 @@ public class CustomCalender extends LinearLayout {
     }
     private boolean isDecember2023(Calendar calendar) {
         return calendar.get(Calendar.YEAR) == 2023 && calendar.get(Calendar.MONTH) == Calendar.DECEMBER;
+    }
+    public interface OnRightButtonClickListener {
+        void onRightButtonClicked();
+    }
+    public void setOnRightButtonClickListener(OnRightButtonClickListener listener) {
+        this.rightButtonClickListener = listener;
+    }
+    public interface OnLeftButtonClickListener {
+        void onLeftButtonClicked();
+    }
+    public void setOnLeftButtonClickListener(OnLeftButtonClickListener listener) {
+        this.leftButtonClickListener = listener;
     }
     private void setAll() {
         readyMonthAndYear();
@@ -300,8 +320,6 @@ public class CustomCalender extends LinearLayout {
     private void readyMonthAndYear() {
         switch (monthYearFormat) {
             case 0:
-                tvMonthYear.setText(MONTHS[selectedDate.get(Calendar.MONTH)].substring(0, 3) + " " + selectedDate.get(Calendar.YEAR));
-                break;
             case 1:
                 tvMonthYear.setText(MONTHS[selectedDate.get(Calendar.MONTH)] + " " + selectedDate.get(Calendar.YEAR));
                 break;
@@ -481,7 +499,10 @@ public class CustomCalender extends LinearLayout {
         this.listener = listener;
         readyMonthAndYear();
     }
+    public void setRightButtonClicked() {
 
+        readyMonthAndYear();
+    }
     /**
      * Register a callback to be invoked when a month navigation button is clicked.
      *
