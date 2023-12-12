@@ -12,6 +12,9 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
+
+import com.pt_plus.Fragment.FragmentAppoinment;
 import com.pt_plus.R;
 
 import org.naishadhparmar.zcustomcalendar.OnDateSelectedListener;
@@ -28,7 +31,7 @@ public class CustomCalender extends LinearLayout {
 
     public static final int THREE_LETTER_MONTH__WITH_YEAR = 0;
     public static final int FULL_MONTH__WITH_YEAR = 1;
-
+    private FragmentAppoinment fragmentAppoinment;
     public static final int SUNDAY = 0;
     public static final int MONDAY = 1;
     public static final int TUESDAY = 2;
@@ -37,7 +40,7 @@ public class CustomCalender extends LinearLayout {
     public static final int FRIDAY = 5;
     public static final int SATURDAY = 6;
 
-    private final String[] MONTHS = new String[] {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
+    private final String[] MONTHS = new String[]{"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
 
     private Context context = null;
     private View view = null;
@@ -66,9 +69,13 @@ public class CustomCalender extends LinearLayout {
 
     /**
      * Constructor that is called when inflating from XML.
+     *
      * @param context The Context the view is running in, through which it can access the current theme, resources, etc.
-     * @param attrs The attributes of the XML tag that is inflating the view.
+     * @param attrs   The attributes of the XML tag that is inflating the view.
      */
+
+
+
     public CustomCalender(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
@@ -82,12 +89,15 @@ public class CustomCalender extends LinearLayout {
         initialize();
     }
 
+
+
+
     private void initialize() {
         view = inflate(context, R.layout.customcalendar, this);
         butLeft = (ImageButton) findViewById(R.id.but_left);
         butRight = (ImageButton) findViewById(R.id.but_right);
-        if(draLeftButton != null) butLeft.setImageDrawable(draLeftButton);
-        if(draRightButton != null) butRight.setImageDrawable(draRightButton);
+        if (draLeftButton != null) butLeft.setImageDrawable(draLeftButton);
+        if (draRightButton != null) butRight.setImageDrawable(draRightButton);
         tvMonthYear = (TextView) findViewById(R.id.tv_month_year);
         tvDaysOfWeek = new TextView[7];
         tvDaysOfWeek[0] = (TextView) findViewById(R.id.tv_day_of_week_0);
@@ -105,117 +115,169 @@ public class CustomCalender extends LinearLayout {
             @Override
             public void onClick(View v) {
                 Calendar previousMonth = Calendar.getInstance();
-                previousMonth.set(Calendar.MONTH, selectedDate.get(Calendar.MONTH)-1 != -1 ? selectedDate.get(Calendar.MONTH)-1: Calendar.DECEMBER);
-                previousMonth.set(Calendar.YEAR, selectedDate.get(Calendar.MONTH)-1 != -1 ? selectedDate.get(Calendar.YEAR) : selectedDate.get(Calendar.YEAR)-1);
-                previousMonth.set(Calendar.DAY_OF_MONTH, selectedDate.get(Calendar.DAY_OF_MONTH) < previousMonth.getActualMaximum(Calendar.DAY_OF_MONTH) ? selectedDate.get(Calendar.DAY_OF_MONTH) : previousMonth.getActualMaximum(Calendar.DAY_OF_MONTH));
-                selectedDate = previousMonth;
-                if(rightButtonListener != null ) {
-                    Map<Integer, Object>[] arr = leftButtonListener.onNavigationButtonClicked(PREVIOUS, previousMonth);
-                    mapDateToDesc = arr[0];
-                    mapDateToTag = arr[1];
+                previousMonth.setTime(selectedDate.getTime());
+                previousMonth.add(Calendar.MONTH, -1);
+
+                // Allow going back to the previous month only if the current month is not December 2023
+                if (!isDecember2023(selectedDate)) {
+                    selectedDate = previousMonth;
+                    if (rightButtonListener != null) {
+                        Map<Integer, Object>[] arr = leftButtonListener.onNavigationButtonClicked(PREVIOUS, previousMonth);
+                        mapDateToDesc = arr[0];
+                        mapDateToTag = arr[1];
+                    } else {
+                        mapDateToDesc = null;
+                        mapDateToTag = null;
+                    }
+                    setAll();
+                    //fragmentAppoinment.updateDisabledDays();
                 }
-                else {
-                    mapDateToDesc = null;
-                    mapDateToTag = null;
-                }
-                setAll();
             }
         });
+
         butRight.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 Calendar nextMonth = Calendar.getInstance();
-                nextMonth.set(Calendar.MONTH, selectedDate.get(Calendar.MONTH)+1 != 12 ? selectedDate.get(Calendar.MONTH)+1: Calendar.JANUARY);
-                nextMonth.set(Calendar.YEAR, selectedDate.get(Calendar.MONTH)+1 != 12 ? selectedDate.get(Calendar.YEAR) : selectedDate.get(Calendar.YEAR)+1);
+                nextMonth.set(Calendar.MONTH, selectedDate.get(Calendar.MONTH) + 1 != 12 ? selectedDate.get(Calendar.MONTH) + 1 : Calendar.JANUARY);
+                nextMonth.set(Calendar.YEAR, selectedDate.get(Calendar.MONTH) + 1 != 12 ? selectedDate.get(Calendar.YEAR) : selectedDate.get(Calendar.YEAR) + 1);
                 nextMonth.set(Calendar.DAY_OF_MONTH, selectedDate.get(Calendar.DAY_OF_MONTH) < nextMonth.getActualMaximum(Calendar.DAY_OF_MONTH) ? selectedDate.get(Calendar.DAY_OF_MONTH) : nextMonth.getActualMaximum(Calendar.DAY_OF_MONTH));
                 selectedDate = nextMonth;
-                if(leftButtonListener != null) {
+                if (leftButtonListener != null) {
                     Map<Integer, Object>[] arr = leftButtonListener.onNavigationButtonClicked(NEXT, nextMonth);
                     mapDateToDesc = arr[0];
                     mapDateToTag = arr[1];
-                }
-                else {
+                } else {
                     mapDateToDesc = null;
                     mapDateToTag = null;
                 }
                 setAll();
+                //fragmentAppoinment.updateDisabledDays();
+
+
             }
         });
     }
-
+    private boolean isDecember2023(Calendar calendar) {
+        return calendar.get(Calendar.YEAR) == 2023 && calendar.get(Calendar.MONTH) == Calendar.DECEMBER;
+    }
     private void setAll() {
         readyMonthAndYear();
         llWeeks.removeAllViews();
-        btnAll  =   new View[selectedDate.getActualMaximum(Calendar.DAY_OF_MONTH)];
+        btnAll = new View[selectedDate.getActualMaximum(Calendar.DAY_OF_MONTH)];
         LinearLayout llWeek = new LinearLayout(context);
-        llWeek.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, rowHeight == 0?LayoutParams.WRAP_CONTENT:(int)rowHeight));
+        llWeek.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, rowHeight == 0 ? LayoutParams.WRAP_CONTENT : (int) rowHeight));
         llWeek.setOrientation(LinearLayout.HORIZONTAL);
         Calendar previousMonth = Calendar.getInstance();
-        previousMonth.set(Calendar.MONTH, selectedDate.get(Calendar.MONTH)-1 != -1 ? selectedDate.get(Calendar.MONTH)-1: Calendar.DECEMBER);
-        previousMonth.set(Calendar.YEAR, selectedDate.get(Calendar.MONTH)-1 != -1 ? selectedDate.get(Calendar.YEAR) : selectedDate.get(Calendar.YEAR)-1);
+        previousMonth.set(Calendar.MONTH, selectedDate.get(Calendar.MONTH) - 1 != -1 ? selectedDate.get(Calendar.MONTH) - 1 : Calendar.DECEMBER);
+        previousMonth.set(Calendar.YEAR, selectedDate.get(Calendar.MONTH) - 1 != -1 ? selectedDate.get(Calendar.YEAR) : selectedDate.get(Calendar.YEAR) - 1);
         Calendar thisMonth = Calendar.getInstance();
         thisMonth.set(Calendar.MONTH, selectedDate.get(Calendar.MONTH));
         thisMonth.set(Calendar.YEAR, selectedDate.get(Calendar.YEAR));
         thisMonth.set(Calendar.DAY_OF_MONTH, 1);
-        int j = thisMonth.get(Calendar.DAY_OF_WEEK)-startFrom-1;
-        for(int i = 0 ; i < j ; i++) {
+        int j = thisMonth.get(Calendar.DAY_OF_WEEK) - startFrom - 1;
+
+        for (int i = 0; i < j; i++) {
             View btn = null;
-            if(mapDescToProp != null && mapDescToProp.get("disabled") != null && mapDescToProp.get("disabled").layoutResource != -1) {
+            if (mapDescToProp != null && mapDescToProp.get("disabled") != null && mapDescToProp.get("disabled").layoutResource != -1) {
                 Property prop = mapDescToProp.get("disabled");
-                btn =  LayoutInflater.from(context).inflate(prop.layoutResource, null);
-                if(prop.dateTextViewResource != -1 && btn.findViewById(prop.dateTextViewResource) != null) ((TextView)btn.findViewById(prop.dateTextViewResource)).setText("" + (previousMonth.getActualMaximum(Calendar.DAY_OF_MONTH)-(j-i-1)));
-            }
-            else {
+                btn = LayoutInflater.from(context).inflate(prop.layoutResource, null);
+                if (prop.dateTextViewResource != -1) {
+                    View innerView = btn.findViewById(prop.dateTextViewResource);
+                    if (innerView instanceof TextView) {
+                        TextView dateTextView = (TextView) innerView;
+                        dateTextView.setText("" + (previousMonth.getActualMaximum(Calendar.DAY_OF_MONTH) - (j - i - 1)));
+                        dateTextView.setTextColor(ContextCompat.getColor(context, R.color.grey_text_color));
+                    }
+                }
+                // Set background color to null or transparent
+                btn.setBackgroundResource(android.R.color.transparent);
+            } else {
                 btn = new Button(context);
-                ((Button)btn).setText("" + (previousMonth.getActualMaximum(Calendar.DAY_OF_MONTH)-(j-i-1)));
+                Button button = (Button) btn;
+                button.setText("" + (previousMonth.getActualMaximum(Calendar.DAY_OF_MONTH) - (j - i - 1)));
+                // Set text color to gray
+                button.setTextColor(ContextCompat.getColor(context, R.color.grey_text_color));
+                // Set background color to null or transparent
+                btn.setBackgroundResource(android.R.color.transparent);
             }
             btn.setLayoutParams(new LayoutParams(0, LayoutParams.MATCH_PARENT, 1));
             llWeek.addView(btn);
             btn.setEnabled(false);
+
         }
         int index = 0;
-        for(int i = 0 ; i < (7-j) ; i++) {
-            btnAll[index] = readyButton(index+1);
-            btnAll[index].setEnabled(true);
+        for (int i = 0; i < (7 - j); i++) {
+            btnAll[index] = readyButton(index + 1);
+            btnAll[index].setEnabled(index + 1 >= selectedDate.get(Calendar.DAY_OF_MONTH)); // Disable if date is before the current date
+            // Set text color to gray
+            if (btnAll[index] instanceof Button) {
+                ((Button) btnAll[index]).setTextColor(ContextCompat.getColor(context, R.color.grey_text_color));
+            }
+            // Set background color to null or transparent
+            btnAll[index].setBackgroundResource(android.R.color.transparent);
             llWeek.addView(btnAll[index]);
             index++;
         }
         llWeeks.addView(llWeek);
-        while((thisMonth.getActualMaximum(Calendar.DAY_OF_MONTH)-7)>index) {
+        while ((thisMonth.getActualMaximum(Calendar.DAY_OF_MONTH) - 7) > index) {
             llWeek = new LinearLayout(context);
-            llWeek.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, rowHeight == 0?LayoutParams.WRAP_CONTENT:(int)rowHeight));
+            llWeek.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, rowHeight == 0 ? LayoutParams.WRAP_CONTENT : (int) rowHeight));
             llWeek.setOrientation(LinearLayout.HORIZONTAL);
             for (int i = 0; i < 7; i++) {
-                btnAll[index] = readyButton(index+1);
-                llWeek.addView(btnAll[index]);
+                btnAll[index] = readyButton(index + 1);
+
                 btnAll[index].setEnabled(true);
+                if (btnAll[index] instanceof Button) {
+                    ((Button) btnAll[index]).setTextColor(ContextCompat.getColor(context, R.color.grey_text_color));
+                }
+
+                // Set background color to null or transparent
+                btnAll[index].setBackgroundResource(android.R.color.transparent);
+
+                llWeek.addView(btnAll[index]);
                 index++;
             }
             llWeeks.addView(llWeek);
         }
         llWeek = new LinearLayout(context);
-        llWeek.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, rowHeight == 0?LayoutParams.WRAP_CONTENT:(int)rowHeight));
+        llWeek.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, rowHeight == 0 ? LayoutParams.WRAP_CONTENT : (int) rowHeight));
         llWeek.setOrientation(LinearLayout.HORIZONTAL);
         int i = 0;
         for (; index < selectedDate.getActualMaximum(Calendar.DAY_OF_MONTH); index++, i++) {
-            btnAll[index] = readyButton(index+1);
-            llWeek.addView(btnAll[index]);
+            btnAll[index] = readyButton(index + 1);
             btnAll[index].setEnabled(true);
+            llWeek.addView(btnAll[index]);
+
         }
-        for(int k=1; k<=(7-i) ; k++) {
+        for (int k = 1; k <= (7 - i); k++) {
             View btn = null;
-            if(mapDescToProp != null && mapDescToProp.get("disabled") != null) {
+            if (mapDescToProp != null && mapDescToProp.get("disabled") != null && mapDescToProp.get("disabled").layoutResource != -1) {
                 Property prop = mapDescToProp.get("disabled");
-                btn =  LayoutInflater.from(context).inflate(prop.layoutResource, null);
-                if(prop.dateTextViewResource != -1 && btn.findViewById(prop.dateTextViewResource) != null) ((TextView)btn.findViewById(prop.dateTextViewResource)).setText("" + k);
-            }
-            else {
+                btn = LayoutInflater.from(context).inflate(prop.layoutResource, null);
+                if (prop.dateTextViewResource != -1) {
+                    View innerView = btn.findViewById(prop.dateTextViewResource);
+                    if (innerView instanceof TextView) {
+                        TextView dateTextView = (TextView) innerView;
+                        dateTextView.setText("" + k);
+                        dateTextView.setTextColor(ContextCompat.getColor(context, R.color.grey_text_color));
+                    }
+                }
+                // Set background color to null or transparent
+                btn.setBackgroundResource(android.R.color.transparent);
+            } else {
                 btn = new Button(context);
-                ((Button)btn).setText("" + k);
+                Button button = (Button) btn;
+                button.setText("" + k);
+                // Set text color to gray
+                button.setTextColor(ContextCompat.getColor(context, R.color.grey_text_color));
+                // Set background color to null or transparent
+                btn.setBackgroundResource(android.R.color.transparent);
             }
             btn.setLayoutParams(new LayoutParams(0, LayoutParams.MATCH_PARENT, 1));
             llWeek.addView(btn);
             btn.setEnabled(false);
+
         }
         llWeeks.addView(llWeek);
     }
@@ -223,61 +285,64 @@ public class CustomCalender extends LinearLayout {
     private void readyDaysOfWeek() {
         String[] arrOfDaysOfWeek = getResources().getStringArray(R.array.days_of_week);
         int j = 0;
-        for(int i = startFrom; i < 7 ; i++, j++) {
-            if(dayOfWeekLength > arrOfDaysOfWeek[i].length()) tvDaysOfWeek[j].setText(arrOfDaysOfWeek[i]);
+        for (int i = startFrom; i < 7; i++, j++) {
+            if (dayOfWeekLength > arrOfDaysOfWeek[i].length())
+                tvDaysOfWeek[j].setText(arrOfDaysOfWeek[i]);
             else tvDaysOfWeek[j].setText(arrOfDaysOfWeek[i].substring(0, dayOfWeekLength));
         }
-        for(int i = 0 ; i < startFrom ; i++, j++) {
-            if(dayOfWeekLength > arrOfDaysOfWeek[i].length()) tvDaysOfWeek[j].setText(arrOfDaysOfWeek[i]);
+        for (int i = 0; i < startFrom; i++, j++) {
+            if (dayOfWeekLength > arrOfDaysOfWeek[i].length())
+                tvDaysOfWeek[j].setText(arrOfDaysOfWeek[i]);
             else tvDaysOfWeek[j].setText(arrOfDaysOfWeek[i].substring(0, dayOfWeekLength));
         }
     }
 
     private void readyMonthAndYear() {
         switch (monthYearFormat) {
-            case 0: tvMonthYear.setText(MONTHS[selectedDate.get(Calendar.MONTH)].substring(0,3) + " " + selectedDate.get(Calendar.YEAR));
+            case 0:
+                tvMonthYear.setText(MONTHS[selectedDate.get(Calendar.MONTH)].substring(0, 3) + " " + selectedDate.get(Calendar.YEAR));
                 break;
-            case 1: tvMonthYear.setText(MONTHS[selectedDate.get(Calendar.MONTH)] + " " + selectedDate.get(Calendar.YEAR));
+            case 1:
+                tvMonthYear.setText(MONTHS[selectedDate.get(Calendar.MONTH)] + " " + selectedDate.get(Calendar.YEAR));
                 break;
         }
     }
 
     private View readyButton(final int date) {
         final View btn;
-        if(mapDescToProp != null) {
+        if (mapDescToProp != null) {
             Property prop = mapDescToProp.get("default");
-            if(mapDateToDesc != null && mapDateToDesc.get(new Integer(date)) != null && !mapDateToDesc.get(new Integer(date)).equals("default")) {
+            if (mapDateToDesc != null && mapDateToDesc.get(new Integer(date)) != null && !mapDateToDesc.get(new Integer(date)).equals("default")) {
                 prop = mapDescToProp.get(mapDateToDesc.get(new Integer(date)));
             }
-            if(prop != null && prop.layoutResource!=-1) {
-                btn=LayoutInflater.from(context).inflate(prop.layoutResource, null);
-                if(prop.dateTextViewResource!=-1) ((TextView)btn.findViewById(prop.dateTextViewResource)).setText("" +date);
+            if (prop != null && prop.layoutResource != -1) {
+                btn = LayoutInflater.from(context).inflate(prop.layoutResource, null);
+                if (prop.dateTextViewResource != -1)
+                    ((TextView) btn.findViewById(prop.dateTextViewResource)).setText("" + date);
                 btn.setEnabled(prop.enable);
-            }
-            else {
+            } else {
                 btn = new Button(context);
-                ((Button)btn).setText("" + date);
+                ((Button) btn).setText("" + date);
             }
-        }
-        else {
+        } else {
             btn = new Button(context);
-            ((Button)btn).setText("" + date);
+            ((Button) btn).setText("" + date);
         }
         btn.setLayoutParams(new LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1));
-        if(mapDateToTag != null) btn.setTag(mapDateToTag.get(new Integer(date)));
+        if (mapDateToTag != null) btn.setTag(mapDateToTag.get(new Integer(date)));
         btn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 selectedDate.set(Calendar.DAY_OF_MONTH, date);
-                if(listener != null) {
+                if (listener != null) {
                     listener.onDateSelected(btn, selectedDate, mapDateToDesc.get(new Integer(date)));
                 }
-                if(selectedButton != null) selectedButton.setSelected(false);
+                if (selectedButton != null) selectedButton.setSelected(false);
                 btn.setSelected(true);
                 selectedButton = btn;
             }
         });
-        if(selectedDate.get(Calendar.DAY_OF_MONTH) == date) {
+        if (selectedDate.get(Calendar.DAY_OF_MONTH) == date) {
             btn.setSelected(true);
             selectedButton = btn;
         }
@@ -287,6 +352,7 @@ public class CustomCalender extends LinearLayout {
 
     /**
      * Set the format in which the month and the year are displayed on the top.
+     *
      * @param monthYearFormat Either {@code CustomCalendar.THREE_LETTER_MONTH__WITH_YEAR} or {@code CustomCalendar.FULL_MONTH__WITH_YEAR}.
      */
     public void setMonthYearFormat(int monthYearFormat) {
@@ -296,6 +362,7 @@ public class CustomCalender extends LinearLayout {
 
     /**
      * Set the length of the day of week displayed above the dates.
+     *
      * @param length length of the day of week.
      */
     public void setDayOfWeekLength(int length) {
@@ -305,10 +372,11 @@ public class CustomCalender extends LinearLayout {
 
     /**
      * Set the height of every row of the CustomCalendar.
+     *
      * @param rowHeight Height of the row.
      */
     public void setRowHeight(float rowHeight) {
-        if(rowHeight>0) {
+        if (rowHeight > 0) {
             this.rowHeight = rowHeight;
             setAll();
         }
@@ -316,6 +384,7 @@ public class CustomCalender extends LinearLayout {
 
     /**
      * Set the day of week from which the calendar starts.
+     *
      * @param whichDay {@code CustomCalendar.SUNDAY}, {@code CustomCalendar.MONDAY}, {@code CustomCalendar.TUESDAY}, {@code CustomCalendar.WEDNESDAY}, {@code CustomCalendar.THURSDAY}, {@code CustomCalendar.FRIDAY} or {@code CustomCalendar.SATURDAY}.
      */
     public void setDayOfWeekStartFrom(int whichDay) {
@@ -325,34 +394,41 @@ public class CustomCalender extends LinearLayout {
 
     /**
      * Set the drawable on a navigation button.
+     *
      * @param whichButton Either {@code CustomCalendar.PREVIOUS} or {@code CustomCalendar.NEXT}.
-     * @param resourceId Resource id of the drawable.
+     * @param resourceId  Resource id of the drawable.
      */
     public void setNavigationButtonDrawable(int whichButton, int resourceId) {
-        switch(whichButton) {
-            case PREVIOUS: butLeft.setImageResource(resourceId);
+        switch (whichButton) {
+            case PREVIOUS:
+                butLeft.setImageResource(resourceId);
                 break;
-            case NEXT: butRight.setImageResource(resourceId);
+            case NEXT:
+                butRight.setImageResource(resourceId);
                 break;
         }
     }
 
     /**
      * Set the drawable on a navigation button.
+     *
      * @param whichButton Either {@code CustomCalendar.PREVIOUS} or {@code CustomCalendar.NEXT}.
-     * @param drawable Drawable to be set.
+     * @param drawable    Drawable to be set.
      */
     public void setNavigationButtonDrawable(int whichButton, Drawable drawable) {
-        switch(whichButton) {
-            case PREVIOUS: butLeft.setImageDrawable(drawable);
+        switch (whichButton) {
+            case PREVIOUS:
+                butLeft.setImageDrawable(drawable);
                 break;
-            case NEXT: butRight.setImageDrawable(drawable);
+            case NEXT:
+                butRight.setImageDrawable(drawable);
                 break;
         }
     }
 
     /**
      * Set the date shown on the CustomCalendar.
+     *
      * @param calendar The month and year combination in this calendar object will be used to show the current month and the day of month in this calendar object will be set selected.
      */
     public void setDate(Calendar calendar) {
@@ -362,7 +438,8 @@ public class CustomCalender extends LinearLayout {
 
     /**
      * Set the date shown on the CustomCalendar and the map linking a date to its description.
-     * @param calendar The month and year combination in this calendar object will be used to show the current month and the day of month in this calendar object will be set selected.
+     *
+     * @param calendar      The month and year combination in this calendar object will be used to show the current month and the day of month in this calendar object will be set selected.
      * @param mapDateToDesc The map linking a date to its description. This description will be accessible from the {@code desc} parameter of the onDateSelected method of OnDateSelectedListener.
      */
     public void setDate(Calendar calendar, Map<Integer, Object> mapDateToDesc) {
@@ -373,9 +450,10 @@ public class CustomCalender extends LinearLayout {
 
     /**
      * Set the date shown on the CustomCalendar, the map linking a date to its description and the map linking a date to the tag on its view.
-     * @param calendar The month and year combination in this calendar object will be used to show the current month and the day of month in this calendar object will be set selected.
+     *
+     * @param calendar      The month and year combination in this calendar object will be used to show the current month and the day of month in this calendar object will be set selected.
      * @param mapDateToDesc The map linking a date to its description. This description will be accessible from the {@code desc} parameter of the onDateSelected method of OnDateSelectedListener.
-     * @param mapDateToTag The map linking a date to the tag to be set on its date view. This tag will be accessible from the {@code view} parameter of the onDateSelected method of the OnDateSelectedListener.
+     * @param mapDateToTag  The map linking a date to the tag to be set on its date view. This tag will be accessible from the {@code view} parameter of the onDateSelected method of the OnDateSelectedListener.
      */
     public void setDate(Calendar calendar, Map<Integer, Object> mapDateToDesc, Map<Integer, Object> mapDateToTag) {
         this.selectedDate = calendar;
@@ -386,6 +464,7 @@ public class CustomCalender extends LinearLayout {
 
     /**
      * Set the map linking a description to its respective Property object.
+     *
      * @param mapDescToProp The map linking description to its property.
      */
     public void setMapDescToProp(Map<Object, Property> mapDescToProp) {
@@ -395,6 +474,7 @@ public class CustomCalender extends LinearLayout {
 
     /**
      * Register a callback to be invoked when a date is clicked.
+     *
      * @param listener The callback that will run.
      */
     public void setOnDateSelectedListener(OnDateSelectedListener listener) {
@@ -404,26 +484,29 @@ public class CustomCalender extends LinearLayout {
 
     /**
      * Register a callback to be invoked when a month navigation button is clicked.
+     *
      * @param whichButton Either {@code CustomCalendar.PREVIOUS} or {@code CustomCalendar.NEXT}.
-     * @param listener The callback that will run.
+     * @param listener    The callback that will run.
      */
     public void setOnNavigationButtonClickedListener(int whichButton, OnNavigationButtonClickedListener listener) {
-        if(whichButton == PREVIOUS) leftButtonListener = listener;
-        else if(whichButton == NEXT) rightButtonListener = listener;
+        if (whichButton == PREVIOUS) leftButtonListener = listener;
+        else if (whichButton == NEXT) rightButtonListener = listener;
     }
 
     /**
      * Set the enabled state of a month navigation button.
+     *
      * @param whichButton Either {@code CustomCalendar.PREVIOUS} or {@code CustomCalendar.NEXT}.
-     * @param enable True if the button is enabled, false otherwise.
+     * @param enable      True if the button is enabled, false otherwise.
      */
     public void setNavigationButtonEnabled(int whichButton, boolean enable) {
-        if(whichButton == PREVIOUS) butLeft.setEnabled(enable);
-        else if(whichButton == NEXT) butRight.setEnabled(enable);
+        if (whichButton == PREVIOUS) butLeft.setEnabled(enable);
+        else if (whichButton == NEXT) butRight.setEnabled(enable);
     }
 
     /**
      * Returns the TextView that shows the month and the year.
+     *
      * @return The TextView that shows the month and the year.
      */
     public TextView getMonthYearTextView() {
@@ -432,6 +515,7 @@ public class CustomCalender extends LinearLayout {
 
     /**
      * Returns an array of all the date views.
+     *
      * @return An array of all the date views. Does not include the disabled previous month and next month views shown for continuity.
      */
     public View[] getAllViews() {
@@ -440,6 +524,7 @@ public class CustomCalender extends LinearLayout {
 
     /**
      * Returns a Calendar representation of the selected date.
+     *
      * @return A Calendar representation of the selected date.
      */
     public Calendar getSelectedDate() {

@@ -9,6 +9,7 @@ import android.os.Message;
 
 import org.naishadhparmar.zcustomcalendar.OnDateSelectedListener;
 import org.naishadhparmar.zcustomcalendar.Property;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,12 +44,12 @@ import com.pt_plus.Service.TrainerServiceNew;
 import com.pt_plus.Utils.AppDateUtils;
 import com.pt_plus.Utils.AppLogger;
 import com.pt_plus.Utils.AppUtils;
+import com.pt_plus.Utils.CustomCalender;
 import com.pt_plus.cons.LocalCache;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.naishadhparmar.zcustomcalendar.CustomCalendar;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -73,6 +74,7 @@ public class FragmentAppoinment extends SuperFragment {
 
     private TrainerService trainerService;
     private TrainerServiceNew trainerServiceOne;
+    private CustomCalender customCalendar;
     View view;
     CommonCardCategoryListAdapter commonCardCategoryListAdapter;
 
@@ -88,20 +90,6 @@ public class FragmentAppoinment extends SuperFragment {
 
         view = inflater.inflate(R.layout.fragment_appoinment, container, false);
         initView(view);
-
-        Calendar calendar = Calendar.getInstance();
-//        calendarView = view.findViewById(R.id.calendarView);
-//        calendarView.setMinimumDate(calendar);
-       // calendarView.setDisabledDays(getDisabledDays());
-
-//        calendarView.setOnDayClickListener(new OnDayClickListener() {
-//            @Override
-//            public void onDayClick(EventDay eventDay) {
-//                AppLogger.log("dafadf        " + eventDay.getCalendar());
-//                loadTimeSlotes(eventDay.getCalendar());
-//            }
-//        });
-
         return view;
     }
 
@@ -111,6 +99,7 @@ public class FragmentAppoinment extends SuperFragment {
     private ImageView imgTrainer, imgPlan;
     private CardView cardViewBookNow;
     private CenterService centerService;
+
     private List<String> unavailableDays = new ArrayList<>();
     private RecyclerView recyclerViewActivities, recyclerEvaningLSotes;
 
@@ -144,7 +133,7 @@ public class FragmentAppoinment extends SuperFragment {
         txtPlanName = v.findViewById(R.id.txt_plan_name);
         txtAMount = v.findViewById(R.id.txt_amount);
 
-
+        customCalendar = view.findViewById(R.id.custom_calendar);
         ProccessView();
 
         recyclerViewActivities = v.findViewById(R.id.rcy_activities);
@@ -189,135 +178,63 @@ public class FragmentAppoinment extends SuperFragment {
         }
     };
 
-//    private List<Calendar> getDisabledDays(List<String> disabledWeekDays) {
-//        System.out.println(" check ----------    " + disabledWeekDays);
-//
-//        List<Calendar> disabledCalendars = new ArrayList<>();
-//
-//        // Get the current day of the week
-//        Calendar today = Calendar.getInstance();
-//        int currentDayOfWeek = today.get(Calendar.DAY_OF_WEEK);
-//
-//        // Iterate through each day in the disabled week days list
-//        for (String disabledWeekDay : disabledWeekDays) {
-//            // Calculate the difference between the current day and the disabled week day
-//            int dayDifference = getDayOfWeek(disabledWeekDay) - currentDayOfWeek;
-//
-//            // Adjust the difference to get the correct day in the future
-//            if (dayDifference <= 0) {
-//                dayDifference += 7;
-//            }
-//
-//            // Create a Calendar instance representing the disabled day
-//            Calendar disabledCalendar = Calendar.getInstance();
-//            disabledCalendar.add(Calendar.DAY_OF_MONTH, dayDifference);
-//
-//
-//            // Limit the loop to add a reasonable number of future occurrences
-//            int futureOccurrencesLimit = 10;
-//            int futureOccurrencesCount = 0;
-//
-//            // Continue adding days until reaching a future month or reaching the limit
-//            while (disabledCalendar.after(today) && futureOccurrencesCount < futureOccurrencesLimit) {
-//                disabledCalendars.add((Calendar) disabledCalendar.clone());
-//                disabledCalendar.add(Calendar.DAY_OF_MONTH, 7); // Move to the next occurrence
-//                futureOccurrencesCount++;
-//                System.out.println("Disabled Calendar: work" + disabledCalendars.get(0));
-//            }
-//        }
-//        return disabledCalendars;
-//    }
 
 
     private void setDisabledDaysNew(JSONArray availableDays) {
         try {
-            // unavailableDays = new ArrayList<>();
-            List<Calendar> disabledCalendars = new ArrayList<>();
-            // New list to store unavailable days
 
-            // Create a list of all days of the week
-            String[] allDays = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "friday", "Saturday"};
-
-            // Iterate through all days and check if they are present in the availableDays JSON
+            List<String> availableWeeks = new ArrayList<>();
+            String[] allDays = {"sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"};
             for (String day : allDays) {
                 boolean isDayAvailable = false;
 
-                for (int i = 0; i < availableDays.length(); i++) {
-                    JSONObject dayObject = availableDays.getJSONObject(i);
-                    String availableDay = dayObject.getString("day");
 
-                    if (day.equalsIgnoreCase(availableDay)) {
-                        isDayAvailable = true;
-                        break;
-                    }
-                }
-
-                if (!isDayAvailable) {
-                    System.out.println("Not available date: " + day);
-                    unavailableDays.add(day);
-
-
-                }
             }
-            List<String> availableWeeks = new ArrayList<>();
-            availableWeeks.add("Sunday");
-            availableWeeks.add("Monday");
-            availableWeeks.add("Tuesday");
-            availableWeeks.add("Wednesday");
-            availableWeeks.add("Thursday");
-            availableWeeks.add("Saturday");
+            for (int i = 0; i < availableDays.length(); i++) {
+                JSONObject dayObject = availableDays.getJSONObject(i);
+                String availableDay = dayObject.getString("day");
+                availableWeeks.add(availableDay);
+            }
+            System.out.println("check == "+availableWeeks);
             List<String> disabledDates = getDisabledDates(availableWeeks);
+            System.out.println("check == 333 "+disabledDates);
 
-            System.out.println("Disabled Dates: " + disabledDates);
 
-
-            //Calendar calendar = Calendar.getInstance();
-            customCalendar = view.findViewById(R.id.custom_calendar);
-
-            // Initialize description hashmap
-            HashMap<Object, Property> descHashMap=new HashMap<>();
-
-            // Initialize default property
-            Property defaultProperty=new Property();
-
-            // Initialize default resource
-            defaultProperty.layoutResource=R.layout.default_view;
-
-            // Initialize and assign variable
-            defaultProperty.dateTextViewResource=R.id.text_view;
-
-            // Put object and property
-            descHashMap.put("default",defaultProperty);
-
-            // for current date
-            Property currentProperty=new Property();
-            currentProperty.layoutResource=R.layout.current_view;
-            currentProperty.dateTextViewResource=R.id.text_view;
-            descHashMap.put("current",currentProperty);
-
-            // for present date
-            Property presentProperty=new Property();
-            presentProperty.layoutResource=R.layout.present_view;
-            presentProperty.dateTextViewResource=R.id.text_view;
-            descHashMap.put("present",presentProperty);
+            HashMap<Object, Property> descHashMap = new HashMap<>();
+            Property defaultProperty = new Property();
+            defaultProperty.layoutResource = R.layout.default_view;
+            defaultProperty.dateTextViewResource = R.id.text_view;
+            descHashMap.put("default", defaultProperty);
+            Property currentProperty = new Property();
+            currentProperty.layoutResource = R.layout.current_view;
+            currentProperty.dateTextViewResource = R.id.text_view;
+            descHashMap.put("current", currentProperty);
+            Property presentProperty = new Property();
+            presentProperty.layoutResource = R.layout.present_view;
+            presentProperty.dateTextViewResource = R.id.text_view;
+            descHashMap.put("present", presentProperty);
 
             // For absent
-            Property absentProperty =new Property();
-            absentProperty.layoutResource=R.layout.absent_view;
-            absentProperty.dateTextViewResource=R.id.text_view;
-            descHashMap.put("absent",absentProperty);
+            Property absentProperty = new Property();
+            absentProperty.layoutResource = R.layout.absent_view;
+            absentProperty.dateTextViewResource = R.id.text_view;
+            descHashMap.put("absent", absentProperty);
 
             // set desc hashmap on custom calendar
             customCalendar.setMapDescToProp(descHashMap);
 
             // Initialize date hashmap
-            HashMap<Integer,Object> dateHashmap=new HashMap<>();
+            HashMap<Integer, Object> dateHashmap = new HashMap<>();
 
             // initialize calendar
-            Calendar calendar=  Calendar.getInstance();
+            Calendar calendar = Calendar.getInstance();
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
             // Put values
-            dateHashmap.put(calendar.get(Calendar.DAY_OF_MONTH),"current");
+            dateHashmap.put(calendar.get(Calendar.DAY_OF_MONTH), "current");
+
+            for (int i = 1; i < calendar.get(Calendar.DAY_OF_MONTH); i++) {
+                dateHashmap.put(i, "present");
+            }
 
             for (String disabledDate : disabledDates) {
                 Calendar disabledCalendar = Calendar.getInstance();
@@ -326,44 +243,51 @@ public class FragmentAppoinment extends SuperFragment {
                 // Get the day of the month for the disabled date
                 int dayOfMonth = disabledCalendar.get(Calendar.DAY_OF_MONTH);
 
-                // Add the disabled date to dateHashmap with status "absent"
-                dateHashmap.put(dayOfMonth, "absent");
+                if ("present".equals(dateHashmap.get(dayOfMonth))) {
+
+                }else{
+                    dateHashmap.put(dayOfMonth, "absent");
+                }
+
             }
             // set date
-            customCalendar.setDate(calendar,dateHashmap);
+            customCalendar.setDate(calendar, dateHashmap);
 
             customCalendar.setOnDateSelectedListener(new OnDateSelectedListener() {
                 @Override
                 public void onDateSelected(View view, Calendar selectedDate, Object desc) {
-                    // get string date
-                    String sDate=selectedDate.get(Calendar.DAY_OF_MONTH)
-                            +"/" +(selectedDate.get(Calendar.MONTH)+1)
-                            +"/" + selectedDate.get(Calendar.YEAR);
+                    int dayOfMonth = selectedDate.get(Calendar.DAY_OF_MONTH);
 
-                    System.out.println("date -------   "+sDate);
+                    if ("absent".equals(dateHashmap.get(dayOfMonth))) {
+                        // Handle the case where an "absent" date is clicked (no action in this example)
+                        return;
+                    }  if ("present".equals(dateHashmap.get(dayOfMonth))) {
+                        // Handle the case where an "absent" date is clicked (no action in this example)
+                        return;
+                    }else {
+                        for (Integer day : dateHashmap.keySet()) {
+                            if ("current".equals(dateHashmap.get(day))) {
+                                dateHashmap.put(day, "default");
+                                break;  // Assuming only one "current" selection is allowed
+                            }
+                        }
+                    }
+
+
+                    // Update the dateHashmap to set the selected date as "current"
+                    dateHashmap.put(dayOfMonth, "current");
+
+                    // Update the CustomCalendar with the modified dateHashmap
+                    customCalendar.setDate(selectedDate, dateHashmap);
+
+                    // Print the selected date
+                    String sDate = dayOfMonth + "/" + (selectedDate.get(Calendar.MONTH) + 1) + "/" + selectedDate.get(Calendar.YEAR);
+                    System.out.println("date -------   " + sDate);
 
                 }
             });
 
 
-
-
-
-           // calendarView.setMinimumDate(calendar);
-
-           // calendarView.setDisabledDays(getDisabledDays());
-//            if (unavailableDays.size() > 0) {
-//                calendarView.setDisabledDays(disabledCalendarsNew);
-//            }
-//            calendarView.setOnDayClickListener(new OnDayClickListener() {
-//                @Override
-//                public void onDayClick(EventDay eventDay) {
-//                    AppLogger.log("dafadf        " + eventDay.getCalendar());
-//                    loadTimeSlotes(eventDay.getCalendar());
-//                }
-//            });
-            System.out.println("Unavailable days: " + Arrays.toString(unavailableDays.toArray()));
-           // System.out.println("Disabled dates: " + Arrays.toString(disabledCalendars.toArray()));
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -372,15 +296,15 @@ public class FragmentAppoinment extends SuperFragment {
         }
     }
 
-    private static List<String> getDisabledDates(List<String> availableWeeks) {
+    private List<String> getDisabledDates(List<String> availableWeeks) {
         List<String> disabledDates = new ArrayList<>();
 
         // Set the start and end date range for your calendar
         Calendar startDate = Calendar.getInstance();
-        startDate.set(2023, Calendar.DECEMBER, 1); // Set your desired start date
+        startDate.set(customCalendar.getSelectedDate().get(Calendar.YEAR), customCalendar.getSelectedDate().get(Calendar.MONTH), 1); // Set your desired start date
 
         Calendar endDate = Calendar.getInstance();
-        endDate.set(2023, Calendar.DECEMBER, 31); // Set your desired end date
+        endDate.set(Calendar.DAY_OF_MONTH, endDate.getActualMaximum(Calendar.DAY_OF_MONTH));
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
 
@@ -407,7 +331,7 @@ public class FragmentAppoinment extends SuperFragment {
         int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
 
         // Convert day of week to a string representation (e.g., "Monday")
-        String[] daysOfWeek = {"", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
+        String[] daysOfWeek = {"", "sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"};
         return daysOfWeek[dayOfWeek];
     }
 
@@ -532,7 +456,7 @@ public class FragmentAppoinment extends SuperFragment {
         return selectBoxModelList;
     }
 
-    private CustomCalendar customCalendar;
+
     private String selectedDate;
 
     private void loadTimeSlotes(Calendar calendar) {
@@ -559,7 +483,7 @@ public class FragmentAppoinment extends SuperFragment {
                         try {
                             System.out.println("sabi 000   ---------    " + jsonObject);
                             if (jsonObject.has("result")) {
-                                JSONArray disabledDates = jsonObject.getJSONArray("result");
+                               JSONArray disabledDates = jsonObject.getJSONArray("result");
                                 setDisabledDaysNew(disabledDates);
                             }
                         } catch (Exception e) {
@@ -624,10 +548,7 @@ public class FragmentAppoinment extends SuperFragment {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-              /*  case R.id.lnr_trainer_see_all: {
 
-                    break;
-                }*/
                 case R.id.img_back: {
                     goback();
                     break;

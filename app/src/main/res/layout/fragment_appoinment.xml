@@ -267,7 +267,7 @@
 <!--                            app:selectionColor="@color/yellow"-->
 
 <!--                            app:todayLabelColor="@color/white" />-->
-                        <org.naishadhparmar.zcustomcalendar.CustomCalendar
+                        <com.pt_plus.Utils.CustomCalender
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:id="@+id/custom_calendar"
