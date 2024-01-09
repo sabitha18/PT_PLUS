@@ -38,6 +38,7 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.pt_plus.Activitys.ActivityLogin;
 import com.pt_plus.Adapter.ReviewsListAdapter;
@@ -110,6 +111,7 @@ public class FragmentTrainerDetails extends SuperFragment {
     private LinearLayout lnrMOreSpecial, linLayout, lnrPlanSellAll, lnrMessage, lnrReviews;
     MapView mMapView;
     private GoogleMap googleMap;
+    private JSONObject jsonObjectNew;
     private RecyclerView recyclerViewGallery, recyclerViewSelectPlan, recyclerViewFavProducts, recyclerViewreviews;
     private TranerDetailsGalleryListAdapter tranerDetailsGalleryListAdapter;
     private TranerDetailsSelectPlanListAdapter tranerDetailsSelectPlanListAdapter;
@@ -218,11 +220,7 @@ public class FragmentTrainerDetails extends SuperFragment {
         recyclerViewreviews.setLayoutManager(new LinearLayoutManager(getFragmentActivity(), LinearLayoutManager.HORIZONTAL, false));
         recyclerViewreviews.setAdapter(reviewsListAdapter);
 
-
-        mMapView = (MapView) view.findViewById(R.id.mapView);
-        mMapView.onCreate(savedInstanceState);
-
-        mMapView.onResume(); // needed to get the map to display immediately
+ // needed to get the map to display immediately
 
         try {
             MapsInitializer.initialize(getActivity().getApplicationContext());
@@ -230,36 +228,6 @@ public class FragmentTrainerDetails extends SuperFragment {
             e.printStackTrace();
         }
 
-        mMapView.getMapAsync(new OnMapReadyCallback() {
-
-            @Override
-            public void onMapReady(GoogleMap mMap) {
-                googleMap = mMap;
-
-                // For showing a move to my location button
-
-                if (ActivityCompat.checkSelfPermission(getFragmentActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getFragmentActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
-                    return;
-                }
-                googleMap.setMyLocationEnabled(true);
-                googleMap.getUiSettings().setMyLocationButtonEnabled(false);
-                // For dropping a marker at a point on the Map
-                LatLng sydney = new LatLng(25.3548, 51.1839);
-                googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker Title").snippet("Marker Description"));
-
-                // For zooming automatically to the location of the marker
-                CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(15).build();
-                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-//                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-            }
-        });
 
 
         lnrMOreSpecial = view.findViewById(R.id.lnt_more_spcial);
@@ -388,8 +356,9 @@ public class FragmentTrainerDetails extends SuperFragment {
                     break;
                 }
                 case R.id.img_location: {
+                    String url = AppUtils.getStringValueFromJson(jsonObjectNew, "map");
                     Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
-                            Uri.parse("http://maps.google.com/maps?saddr=20.344,34.34&daddr=20.5666,45.345"));
+                            Uri.parse(url));
                     startActivity(intent);
                     break;
                 }
@@ -657,7 +626,8 @@ public class FragmentTrainerDetails extends SuperFragment {
                 if (serviceId == ServiceNames.REQUEST_ID_GET_TRANIER_DETAIL) {
                     AppLogger.log("4444444              " + jsonObject);
                     if (jsonObject != null) {
-                        AppLogger.log("44444444444444444444");
+                        AppLogger.log("44444444444444444444   ");
+                        jsonObjectNew = jsonObject;
                         proccessTrainerDetails(jsonObject);
                     }
 
@@ -687,7 +657,7 @@ public class FragmentTrainerDetails extends SuperFragment {
             Glide.with(getFragmentActivity())
                     .load(AppUtils.getStringValueFromJson(jsonObject, "profile_picture"))
                     .into(imgTriner);
-            AppLogger.log("proccessing dataafadsfdsavads     ");
+            AppLogger.log("proccessing ********     "+AppUtils.getStringValueFromJson(jsonObject, "map"));
             txtTrainerName.setText(AppUtils.getStringValueFromJson(jsonObject, "name"));
             JSONArray main_categories = jsonObject.has("main_categories") ? jsonObject.getJSONArray("main_categories") : null;
             String mainCategory = "";
